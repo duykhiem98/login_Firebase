@@ -1,7 +1,8 @@
 import { IC_FACEBOOK, IC_GOOGLE, LOGO } from "../icon";
 import React, { useState } from "react";
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import auth from "@react-native-firebase/auth";
+import { useNavigation } from "@react-navigation/native";
 
 interface ParamsInterface {
   email: string;
@@ -11,12 +12,15 @@ interface ParamsInterface {
 const RegisterScreen = () => {
   const [email, SetEmail] = useState("");
   const [password, SetPassword] = useState("");
-
+  const navigation=useNavigation();
   const register = (email, password) => {
     auth()
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
         console.log("User account created & signed in!");
+        {
+          navigation.navigate('LoginScreen');
+        }
       })
       .catch(error => {
         if (error.code === "auth/email-already-in-use") {
@@ -32,50 +36,53 @@ const RegisterScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, flexDirection: "column", paddingHorizontal: 15 }}>
-      <View style={{ height: 200, justifyContent: "center", alignItems: "center" }}>
-        <Image
-          style={{ width: 100, height: 100 }}
-          source={LOGO} />
-        <Text style={{ fontWeight: "bold" }}>LOGIN APP</Text>
-      </View>
-      <TextInput
-        placeholder="Email Address"
-        placeholderTextColor="#808e9b"
-        style={styles.input}
-        autoCompleteType="email"
-        keyboardType="email-address"
-        textContentType="emailAddress"
-        onChangeText={(text) => SetEmail(text)}
-        value={email}
-      />
-      <TextInput
-        placeholder="Password"
-        placeholderTextColor="#808e9b"
-        style={styles.input}
-        textContentType="password"
-        onChangeText={(text) => SetPassword(text)}
-        value={password}
-      />
-      <View style={{ paddingVertical: 16 }}>
-        <TouchableOpacity style={styles.loginButton} onPress={() => register(email, password)}>
-          <Text style={styles.loginButtonText}>Register</Text>
-        </TouchableOpacity>
-      </View>
+    <ScrollView>
+      <View style={{ flex: 1, flexDirection: "column", paddingHorizontal: 15 }}>
+        <View style={{ height: 200, justifyContent: "center", alignItems: "center" }}>
+          <Image
+            style={{ width: 100, height: 100 }}
+            source={LOGO} />
+          <Text style={{ fontWeight: "bold" }}>LOGIN APP</Text>
+        </View>
+        <TextInput
+          placeholder="Email Address"
+          placeholderTextColor="#808e9b"
+          style={styles.input}
+          autoCompleteType="email"
+          keyboardType="email-address"
+          textContentType="emailAddress"
+          onChangeText={(text) => SetEmail(text)}
+          value={email}
+        />
+        <TextInput
+          placeholder="Password"
+          placeholderTextColor="#808e9b"
+          style={styles.input}
+          textContentType="password"
+          onChangeText={(text) => SetPassword(text)}
+          value={password}
+        />
+        <View style={{ paddingVertical: 16 }}>
+          <TouchableOpacity style={styles.loginButton} onPress={() => register(email, password)}>
+            <Text style={styles.loginButtonText}>Register</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.loginWithBar}>
-        <TouchableOpacity style={styles.iconButton}>
-          <Image style={{ width: 36, height: 36 }}
-                 source={IC_GOOGLE}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton}>
-          <Image style={{ width: 36, height: 36 }}
-                 source={IC_FACEBOOK}
-          />
-        </TouchableOpacity>
+        <View style={styles.loginWithBar}>
+          <TouchableOpacity style={styles.iconButton}>
+            <Image style={{ width: 36, height: 36 }}
+                   source={IC_GOOGLE}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton}>
+            <Image style={{ width: 36, height: 36 }}
+                   source={IC_FACEBOOK}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
+
 
   );
 };
